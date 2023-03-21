@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import Blog from './components/Blog';
+import Notification from './components/Notification';
+import NewForm from './components/NewForm';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -8,18 +10,62 @@ const App = () => {
 	const [user, setUser] = useState(null);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [errorMessage, setErrorMessage] = useState(null);
+	const [title, setTitle] = useState('');
+	const [author, setAuthor] = useState('');
+	const [url, setUrl] = useState('');
 
 	useEffect(() => {
 		blogService.getAll().then((blogs) => setBlogs(blogs));
 	}, []);
 
+	useEffect(() => {
+		const userJSON = window.localStorage.getItem('user');
+		if (userJSON) {
+			const user = JSON.parse(userJSON);
+			setUser(user);
+			blogService.setToken(user.token);
+		}
+	}, []);
+
 	const handleLogin = async (event) => {
 		event.preventDefault();
+		try {
+			const response = await loginService.login({ username, password });
 
-		const reponse = await loginService.login({ username, password });
-		setUser(reponse);
-		setUser('');
-		setPassword('');
+			window.localStorage.setItem('user', JSON.stringify(response));
+			setUser(response);
+			blogService.setToken(user.token);
+			setUsername('');
+			setPassword('');
+		} catch (exception) {
+			setErrorMessage('Wrong credentials');
+			setTimeout(() => setErrorMessage(null), 5000);
+		}
+	};
+
+	const handleLogout = (event) => {
+		event.preventDefault();
+		window.localStorage.removeItem('user');
+		setUser(null);
+	};
+
+	const handleCreate = async (event) => {
+		event.preventDefault();
+		const blog = {
+			title,
+			author,
+			url,
+		};
+		const response = await blogService.create(blog);
+
+		setErrorMessage(`NEW BLOG: ${response.title} by ${response.author} added !`);
+		setTimeout(() => setErrorMessage(null), 5000);
+
+		setBlogs(blogs.concat(response));
+		setTitle('');
+		setAuthor('');
+		setUrl('');
 	};
 
 	const loginForm = () => {
@@ -53,7 +99,19 @@ const App = () => {
 		return (
 			<div>
 				<h2>blogs</h2>
-
+				<h3>
+					{user.name} logged in <button onClick={handleLogout}>Logout</button>
+				</h3>
+				<h2>Create New</h2>
+				<NewForm
+					title={title}
+					author={author}
+					url={url}
+					handleTitle={(event) => setTitle(event.target.value)}
+					handleAuthor={(event) => setAuthor(event.target.value)}
+					handleUrl={(event) => setUrl(event.target.value)}
+					handleCreate={handleCreate}
+				/>
 				{blogs.map((blog) => (
 					<Blog
 						key={blog.id}
@@ -64,7 +122,13 @@ const App = () => {
 		);
 	};
 
-	return <div>{user ? blogsForm() : loginForm()}</div>;
+	return (
+		<div>
+			<Notification error={errorMessage} />
+
+			{user ? blogsForm() : loginForm()}
+		</div>
+	);
 };
 
 export default App;

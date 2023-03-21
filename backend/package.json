@@ -1,23 +1,23 @@
 {
-	"name": "fullstackopen-part4",
+	"name": "fullstackopen-part5",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
 		"start": "cross-env NODE_ENV=production node index.js",
 		"test": "cross-env NODE_ENV=test jest --verbose --runInBand",
 		"dev": "cross-env NODE_ENV=development nodemon index.js",
-		"build": "rm -rf dist && cd ../frontend/ && npm run build && cp -r dist ../blogList"
+		"build": "rm -rf dist && cd ../frontend/ && npm run build && cp -r dist ../backend"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/CastillejaCode/fullstackopen-part4.git"
+		"url": "git+https://github.com/CastillejaCode/fullstackopen-5.git"
 	},
 	"author": "Julian Krzysiak",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/CastillejaCode/fullstackopen-part4/issues"
+		"url": "https://github.com/CastillejaCode/fullstackopen-5/issues"
 	},
-	"homepage": "https://github.com/CastillejaCode/fullstackopen-part4#readme",
+	"homepage": "https://github.com/CastillejaCode/fullstackopen-5#readme",
 	"description": "",
 	"devDependencies": {
 		"eslint": "^8.36.0",
@@ -36,7 +36,6 @@
 		"express": "^4.18.2",
 		"express-async-errors": "^3.1.1",
 		"jsonwebtoken": "^9.0.0",
-		"lodash": "^4.17.21",
 		"lodash.countby": "^4.6.0",
 		"lodash.groupby": "^4.6.0",
 		"mongoose": "^6.10.3",

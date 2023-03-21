@@ -17,7 +17,7 @@ const App = () => {
 	const newBlogRef = useRef();
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs));
+		blogService.getAll().then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
 	}, []);
 
 	useEffect(() => {
@@ -36,7 +36,7 @@ const App = () => {
 
 			window.localStorage.setItem('user', JSON.stringify(response));
 			setUser(response);
-			blogService.setToken(user.token);
+			blogService.setToken(response.token);
 			setUsername('');
 			setPassword('');
 		} catch (exception) {
@@ -47,17 +47,31 @@ const App = () => {
 
 	const handleLogout = (event) => {
 		event.preventDefault();
+		setUsername('');
+		setPassword('');
 		window.localStorage.removeItem('user');
 		setUser(null);
+		blogService.setToken(null);
 	};
 
 	const addBlog = async (blog) => {
 		const response = await blogService.create(blog);
-
 		setErrorMessage(`NEW BLOG: ${response.title} by ${response.author} added !`);
 		setTimeout(() => setErrorMessage(null), 5000);
 		newBlogRef.current.toggleVisible();
 		setBlogs(blogs.concat(response));
+	};
+
+	const updateBlog = async (id, blog) => {
+		const response = await blogService.udpate(id, blog);
+		setBlogs(blogs.filter((blog) => (blog.id === id ? response : blog)).sort((a, b) => b.likes - a.likes));
+	};
+
+	const deleteBlog = async (id, blog) => {
+		if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)) {
+			const response = await blogService.remove(id);
+			setBlogs(blogs.filter((blog) => (blog.id === id ? null : blog)));
+		}
 	};
 
 	const blogsSection = () => {
@@ -77,6 +91,9 @@ const App = () => {
 					<Blog
 						key={blog.id}
 						blog={blog}
+						handleUpdate={updateBlog}
+						handleDelete={deleteBlog}
+						user={user}
 					/>
 				))}
 			</div>

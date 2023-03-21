@@ -20,6 +20,7 @@ blogsRouter.post('/', async (request, response) => {
 
 	const blog = new Blog({ ...request.body, user: user.id });
 	const savedBlog = await blog.save();
+	await savedBlog.populate('user', { username: 1, name: 1 });
 	user.blogs = user.blogs.concat(savedBlog._id);
 	await user.save();
 	response.status(201).json(savedBlog);
@@ -28,6 +29,7 @@ blogsRouter.post('/', async (request, response) => {
 blogsRouter.delete('/:id', async (request, response) => {
 	const blog = await Blog.findById(request.params.id);
 	const user = request.user;
+
 	if (user.id.toString() !== blog.user._id.toString()) {
 		return response.status(401).json({ error: 'token does not match blog user' });
 	}

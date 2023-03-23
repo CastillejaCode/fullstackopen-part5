@@ -17,7 +17,7 @@ const App = () => {
 	const newBlogRef = useRef();
 
 	useEffect(() => {
-		blogService.getAll().then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+		blogService.getAll().then((blogsReturn) => setBlogs(blogsReturn.sort((a, b) => b.likes - a.likes)));
 	}, []);
 
 	useEffect(() => {
@@ -69,7 +69,7 @@ const App = () => {
 
 	const deleteBlog = async (id, blog) => {
 		if (window.confirm(`Are you sure you want to delete ${blog.title} by ${blog.author}`)) {
-			const response = await blogService.remove(id);
+			await blogService.remove(id);
 			setBlogs(blogs.filter((blog) => (blog.id === id ? null : blog)));
 		}
 	};
@@ -79,10 +79,15 @@ const App = () => {
 			<div>
 				<h2>blogs</h2>
 				<h3>
-					{user.name} logged in <button onClick={handleLogout}>Logout</button>
+					{user.name} logged in{' '}
+					<button
+						type='button'
+						onClick={handleLogout}>
+						Logout
+					</button>
 				</h3>
 				<Togglable
-					label={'new note'}
+					label='new note'
 					ref={newBlogRef}>
 					<h3>Create new note</h3>
 					<BlogForm handleCreate={addBlog} />

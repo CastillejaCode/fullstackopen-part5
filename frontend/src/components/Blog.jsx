@@ -34,18 +34,31 @@ const Blog = ({ blog, handleUpdate, handleDelete, user }) => {
 		<div style={blogStyle}>
 			<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 				{blog.title} by {blog.author}
-				<button onClick={toggleExpand}>{expand ? 'hide' : 'view'}</button>
+				<button
+					type='button'
+					onClick={toggleExpand}>
+					{expand ? 'hide' : 'view'}
+				</button>
 			</div>
 			{expand ? (
-				<div>
+				<div className='expand'>
 					{blog.url}
 					<br />
-					Likes: {likes} <button onClick={addLikes}>like!</button>
+					Likes: {likes}{' '}
+					<button
+						type='button'
+						onClick={addLikes}>
+						like!
+					</button>
 					<br />
 					User: {blog.user.name}
 					<br />
 					{user.username === blog.user.username ? (
-						<button onClick={() => handleDelete(blog.id, blog)}>remove</button>
+						<button
+							type='button'
+							onClick={() => handleDelete(blog.id, blog)}>
+							remove
+						</button>
 					) : (
 						''
 					)}

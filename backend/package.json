@@ -6,7 +6,9 @@
 		"start": "cross-env NODE_ENV=production node index.js",
 		"test": "cross-env NODE_ENV=test jest --verbose --runInBand",
 		"dev": "cross-env NODE_ENV=development nodemon index.js",
-		"build": "rm -rf dist && cd ../frontend/ && npm run build && cp -r dist ../backend"
+		"build": "rm -rf dist && cd ../frontend/ && npm run build && cp -r dist ../backend",
+		"start:test": "NODE_ENV=test node index.js",
+		"cypress:open": "cypress open"
 	},
 	"repository": {
 		"type": "git",
@@ -20,9 +22,11 @@
 	"homepage": "https://github.com/CastillejaCode/fullstackopen-5#readme",
 	"description": "",
 	"devDependencies": {
+		"cypress": "^12.8.1",
 		"eslint": "^8.36.0",
 		"eslint-config-airbnb-base": "^15.0.0",
 		"eslint-config-prettier": "^8.7.0",
+		"eslint-plugin-cypress": "^2.12.1",
 		"eslint-plugin-import": "^2.27.5",
 		"jest": "^29.5.0",
 		"nodemon": "^2.0.21",

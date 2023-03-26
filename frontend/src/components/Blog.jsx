@@ -31,7 +31,9 @@ const Blog = ({ blog, handleUpdate, handleDelete, user }) => {
 		setExpand(!expand);
 	};
 	return (
-		<div style={blogStyle}>
+		<div
+			className='blog'
+			style={blogStyle}>
 			<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 				{blog.title} by {blog.author}
 				<button
@@ -56,6 +58,7 @@ const Blog = ({ blog, handleUpdate, handleDelete, user }) => {
 					{user.username === blog.user.username ? (
 						<button
 							type='button'
+							className='remove'
 							onClick={() => handleDelete(blog.id, blog)}>
 							remove
 						</button>

@@ -4,16 +4,14 @@ module.exports = {
 		commonjs: true,
 		es2021: true,
 		jest: true,
-		cypress/globals: true
+		'cypress/globals': true,
 	},
 	extends: ['airbnb-base', 'prettier'],
 	overrides: [],
 	parserOptions: {
 		ecmaVersion: 'latest',
 	},
-	plugins: [
-        "react", "jest", "cypress"
-    ],
+	plugins: ['react', 'jest', 'cypress'],
 	rules: {
 		'no-console': 0,
 		'no-underscore-dangle': 0,
